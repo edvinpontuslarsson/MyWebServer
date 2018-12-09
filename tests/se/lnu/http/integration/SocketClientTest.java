@@ -11,29 +11,69 @@ import se.lnu.http.client.SocketClient;
 
 public class SocketClientTest {
 
-	
-	/* This test requires both online server and access to internet
-	 * */
 	@Test
-	public void testGetFromOnlineServer() throws Exception {
-		
+	public void testContainsHTTP200OK() throws Exception {
 		SocketClient sut = new SocketClient(new Socket(), new HTTPGetProtocoll());
-		String actual = sut.get("194.47.172.159", 80, "/");
-		
-		String expected[] = new String[7];
-		expected[0] = "HTTP/1.1 200 OK\r\n";
-		expected[1] = "Date: ";
-		expected[2] = "Server: Apache/2.2.17 (Win32) mod_wsgi/3.3 Python/2.6.6\r\n";
-		expected[3] = "Accept-Ranges: bytes\r\n";
-		expected[4] = "Content-Length: 44\r\n";
-		expected[5] = "Content-Type: text/html\r\n";
-		expected[6] = "\r\n";
-		
-		for(String exp : expected) {
-			assertTrue(actual.contains(exp));
-		}
-		
+		String actual = sut.get("localhost", 9000, "index.html");
+
+		System.out.println(actual);
+
+		String expected = "HTTP/1.1 200 OK\r\n";
+		assertTrue(actual.contains(expected));
 	}
-	
-	
+
+	@Test
+	public void testContainsDate() throws Exception {
+		SocketClient sut = new SocketClient(new Socket(), new HTTPGetProtocoll());
+		String actual = sut.get("127.0.0.1", 9000, "index.html");
+
+		String expected = "Date: ";
+		assertTrue(actual.contains(expected));
+	}
+
+	@Test
+	public void testContainsServerInfo() throws Exception {
+		SocketClient sut = new SocketClient(new Socket(), new HTTPGetProtocoll());
+		String actual = sut.get("127.0.0.1", 9000, "index.html");
+
+		String expected = "Server: Apache/2.2.17 (Win32) mod_wsgi/3.3 Python/2.6.6\r\n";
+		assertTrue(actual.contains(expected));
+	}
+
+	@Test
+	public void testContainsAcceptRanges() throws Exception {
+		SocketClient sut = new SocketClient(new Socket(), new HTTPGetProtocoll());
+		String actual = sut.get("127.0.0.1", 9000, "index.html");
+
+		String expected = "Accept-Ranges: bytes\r\n";
+		assertTrue(actual.contains(expected));
+	}
+
+	@Test
+	public void testContainsContentLength() throws Exception {
+		SocketClient sut = new SocketClient(new Socket(), new HTTPGetProtocoll());
+		String actual = sut.get("127.0.0.1", 9000, "index.html");
+
+		String expected = "Content-Length: 44\r\n";
+		assertTrue(actual.contains(expected));
+	}
+
+	@Test
+	public void testContainsContentType() throws Exception {
+		SocketClient sut = new SocketClient(new Socket(), new HTTPGetProtocoll());
+		String actual = sut.get("127.0.0.1", 9000, "index.html");
+
+		String expected = "Content-Type: text/html\r\n";
+		assertTrue(actual.contains(expected));
+	}
+
+	@Test
+	public void testContainsProperEnding() throws Exception {
+		SocketClient sut = new SocketClient(new Socket(), new HTTPGetProtocoll());
+		String actual = sut.get("127.0.0.1", 9000, "index.html");
+
+		String expected = "\r\n";
+		assertTrue(actual.contains(expected));
+	}
+
 }
